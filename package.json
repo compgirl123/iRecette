@@ -7,7 +7,7 @@
   "author": "iRecette",
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build && cp _redirects build/",
+    "build": "react-scripts build",
     "format": "prettier --write 'src/**/*.js' && eslint --fix 'src/**/*.js'"
   },
   "dependencies": {
