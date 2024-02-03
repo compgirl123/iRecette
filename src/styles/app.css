@@ -18,6 +18,34 @@ html, body{
     padding-top: 100px;
 }
 
+.foodIngredients{
+  display: table;
+}
+
+.foodImageDiv{
+  float: left;
+  border-style: solid; /* You can use other values like dashed or dotted */
+  border-width: 2px; /* Adjust the width as needed */
+  border-color: red;
+  width: 50%;
+  height: 100%;
+}
+
+.ingredientsListDiv{
+  float: left;
+  border-style: solid; /* You can use other values like dashed or dotted */
+  border-width: 2px; /* Adjust the width as needed */
+  border-color: red;
+  color:white;
+  text-align:center;
+  width: 50%;
+}
+
+.ingredientsListDesign{
+  background-color: #C2B19C;
+  padding:5px;
+}
+
 .filtersDiv {
     display: flex;
     justify-content: center;

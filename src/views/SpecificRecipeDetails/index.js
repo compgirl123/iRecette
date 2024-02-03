@@ -62,11 +62,20 @@ const RecipeDetails = () => {
     <div className="appDiv">
       <div className="recipeDetails">
         <h1>{recipeDetails.meals[0].strMeal}</h1>
-        <img
-          src={recipeDetails.meals[0].strMealThumb}
-          alt={recipeDetails.meals[0].strMeal}
-          style={{ maxWidth: '40%', height: 'auto' }}
-        />
+        <div className="foodIngredients">
+          <div className="foodImageDiv">
+            <img
+              src={recipeDetails.meals[0].strMealThumb}
+              alt={recipeDetails.meals[0].strMeal}
+              style={{ maxWidth: '100%', height: 'auto' }}
+            />
+          </div>
+          <div className="ingredientsListDiv">
+            <div className="ingredientsListDesign">
+              tt
+            </div>
+          </div>
+        </div>
         {recipeDetails.meals[0].strInstructions.split('.').map((sentence, index, array) => {
           const isStep = /Step \d+/.test(sentence);
           return (
