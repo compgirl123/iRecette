@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import Emoji from '../../components/Emoji';
 import '../../styles/app.css';
@@ -26,47 +26,47 @@ const HomePage = () => {
     setSelectedCountry(event.target.value);
   };
 
-  const getRecipes = async () => {
-    const storedRecipes = localStorage.getItem('recipes');
+  const getListOfRecipes = useCallback(async () => {
+    const getRecipes = async () => {
+      const storedRecipes = localStorage.getItem('recipes');
 
-    if (storedRecipes) {
-      return JSON.parse(storedRecipes);
-    }
-
-    try {
-      const alphabet = 'abcdefghijklmnopqrstuvwxyz';
-      const uniqueMealIds = new Set();
-      const meals = [];
-
-      for (const letter of alphabet) {
-        const response = await axios.get(`https://www.themealdb.com/api/json/v1/1/search.php?f=${letter}`);
-
-        if (response.status === 200) {
-          const data = response.data;
-          if (data.meals) {
-            data.meals.forEach((meal) => {
-              if (!uniqueMealIds.has(meal.idMeal)) {
-                uniqueMealIds.add(meal.idMeal);
-                meals.push(meal);
-              }
-            });
-          }
-        } else {
-          console.error(`Error fetching data for letter ${letter}`);
-        }
+      if (storedRecipes) {
+        return JSON.parse(storedRecipes);
       }
 
-      meals.sort((a, b) => a.strMeal.localeCompare(b.strMeal));
+      try {
+        const alphabet = 'abcdefghijklmnopqrstuvwxyz';
+        const uniqueMealIds = new Set();
+        const meals = [];
 
-      localStorage.setItem('recipes', JSON.stringify(meals));
+        for (const letter of alphabet) {
+          const response = await axios.get(`https://www.themealdb.com/api/json/v1/1/search.php?f=${letter}`);
 
-      return meals;
-    } catch (error) {
-      console.error('Error fetching meals:', error);
-    }
-  };
+          if (response.status === 200) {
+            const data = response.data;
+            if (data.meals) {
+              data.meals.forEach((meal) => {
+                if (!uniqueMealIds.has(meal.idMeal)) {
+                  uniqueMealIds.add(meal.idMeal);
+                  meals.push(meal);
+                }
+              });
+            }
+          } else {
+            console.error(`Error fetching data for letter ${letter}`);
+          }
+        }
 
-  const getListOfRecipes = async () => {
+        meals.sort((a, b) => a.strMeal.localeCompare(b.strMeal));
+
+        localStorage.setItem('recipes', JSON.stringify(meals));
+
+        return meals;
+      } catch (error) {
+        console.error('Error fetching meals:', error);
+      }
+    };
+
     try {
       const recipesList = await getRecipes();
 
@@ -79,13 +79,13 @@ const HomePage = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     getListOfRecipes();
-  }, []);
+  }, [getListOfRecipes]);
 
-  const categoryOptions = (recipesList) => {
+  const categoryOptions = useCallback((recipesList) => {
     const uniqueNamesSet = new Set();
 
     recipesList.forEach((item) => {
@@ -94,9 +94,9 @@ const HomePage = () => {
 
     const uniqueNamesArray = Array.from(uniqueNamesSet).sort((a, b) => a.localeCompare(b));
     return uniqueNamesArray;
-  };
+  }, []);
 
-  const countryOptions = (recipesList) => {
+  const countryOptions = useCallback((recipesList) => {
     const uniqueNamesSet = new Set();
 
     recipesList.forEach((item) => {
@@ -105,9 +105,9 @@ const HomePage = () => {
 
     const uniqueNamesArray = Array.from(uniqueNamesSet).sort((a, b) => a.localeCompare(b));
     return uniqueNamesArray;
-  };
+  }, []);
 
-  const filterRecipes = () => {
+  const filterRecipes = useCallback(() => {
     let filteredList = [...originalRecipesList];
 
     if (search !== '') {
@@ -123,11 +123,11 @@ const HomePage = () => {
     }
 
     setFilteredRecipesList(filteredList);
-  };
+  }, [search, selectedCategory, selectedCountry, originalRecipesList]);
 
   useEffect(() => {
     filterRecipes();
-  }, [search, selectedCategory, selectedCountry]);
+  }, [filterRecipes]);
 
   return (
     <div>

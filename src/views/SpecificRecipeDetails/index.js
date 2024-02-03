@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { useParams, Link } from 'react-router-dom';
 import RecipeNotFound from '../../components/RecipeNotFound404';
@@ -10,7 +10,7 @@ const RecipeDetails = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   // Function to update local storage with modified data
-  const updateLocalStorage = () => {
+  const updateLocalStorage = useCallback(() => {
     const storedDetails = localStorage.getItem(`recipeDetails_${idMeal}`);
     console.log(storedDetails);
 
@@ -21,10 +21,10 @@ const RecipeDetails = () => {
       localStorage.setItem(`recipeDetails_${idMeal}`, JSON.stringify(updatedData));
       setRecipeDetails(updatedData);
     }*/
-  };
+  }, [idMeal]);
 
   // Fetch recipe details from API or local storage
-  const fetchRecipeDetails = async () => {
+  const fetchRecipeDetails = useCallback(async () => {
     try {
       const storedDetails = localStorage.getItem(`recipeDetails_${idMeal}`);
 
@@ -43,12 +43,12 @@ const RecipeDetails = () => {
       console.error('Failed to fetch recipe details:', error);
       setIsLoading(false);
     }
-  };
+  }, [idMeal]);
 
   useEffect(() => {
     fetchRecipeDetails();
     updateLocalStorage();
-  }, [idMeal]);
+  }, [fetchRecipeDetails, updateLocalStorage]);
 
   if (isLoading) {
     return <h1>Loading...</h1>;
