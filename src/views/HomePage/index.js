@@ -56,11 +56,8 @@ const HomePage = () => {
             console.error(`Error fetching data for letter ${letter}`);
           }
         }
-
         meals.sort((a, b) => a.strMeal.localeCompare(b.strMeal));
-
         localStorage.setItem('recipes', JSON.stringify(meals));
-
         return meals;
       } catch (error) {
         console.error('Error fetching meals:', error);
@@ -175,7 +172,7 @@ const HomePage = () => {
                 <div className="seeMoreDiv">
                   {hoverIndex === index ? (
                     <>
-                      <Link to={`/details/${recipe.idMeal}`}>
+                      <Link to={{ pathname: `/details/${recipe.idMeal}`, state: { countries: [...countryOptions(originalRecipesList)] } }}>
                         <h1 className="seeMoreTextColor">See more</h1>
                       </Link>
                     </>

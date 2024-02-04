@@ -7,15 +7,23 @@ h2{
     color:white;
 }
 
+h3{
+  text-align: center;
+}
+
 html, body{
-    background-color: #999393;
-    margin: 0; /* Remove default margin to cover the entire viewport */
+    background-color: #94857B;
+    margin: 0;
 }
 
 .appDiv {
-    background-color: #999393;
+    background-color: #94857B;
     min-height: 100vh;
-    padding-top: 100px;
+    padding-top: 20px;
+}
+
+.appDiv2 {
+  background-color: #94857B;
 }
 
 .foodIngredients{
@@ -24,161 +32,182 @@ html, body{
 
 .foodImageDiv{
   float: left;
-  border-style: solid; /* You can use other values like dashed or dotted */
-  border-width: 2px; /* Adjust the width as needed */
-  border-color: red;
   width: 50%;
   height: 100%;
+  margin-top:10px;
 }
 
 .ingredientsListDiv{
   float: left;
-  border-style: solid; /* You can use other values like dashed or dotted */
-  border-width: 2px; /* Adjust the width as needed */
-  border-color: red;
+  border-style: solid;
+  border-width: 2px;
   color:white;
-  text-align:center;
   width: 50%;
 }
 
-.ingredientsListDesign{
-  background-color: #C2B19C;
+.instructions{
+  background-color: #94857B;
   padding:5px;
+  border-radius: 10px;
+  margin: 7px;
+  color:white;
+}
+
+.ingredientsListDesign{
+  background-color: #94857B;
+  padding:5px;
+  border-radius: 10px;
+  margin: 7px;
+  font-size:15pt;
+}
+
+.ingredientsListDesign h1{
+  font-size:20pt;
+}
+
+ingredientsListDesign ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.ingredientsListDesign li {
+  margin-bottom: 8px;
 }
 
 .filtersDiv {
-    display: flex;
-    justify-content: center;
-    margin: 20px;
-    padding: 10px;
+  display: flex;
+  justify-content: center;
+  margin: 20px;
+  padding: 10px;
 }
 
 .searchInput {
-    width: 50%;
-    padding: 10px;
-    font-size: 18px;
-    border-radius: 5px;
-    border: 1px solid #ddd;
-    padding:10px;
+  width: 50%;
+  padding: 10px;
+  font-size: 18px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+  padding:10px;
 }
 
 .homePageListOfBreweries {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-start;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
 }
 
 .breweriestListStyle {
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    padding: 20px;
-    margin: 10px;
-    flex: 0 0 30%;
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: transparent;
-    height: 300px;
-    overflow: hidden;
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 20px;
+  margin: 10px;
+  flex: 0 0 30%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
+  height: 300px;
+  overflow: hidden;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
 }
 
 .imageStyle {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    position: absolute;
-    top: 0;
-    left: 0;
-    opacity: 0.5;
-    z-index: 1;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0.5;
+  z-index: 1;
 }
 
 .seeMoreDiv {
-    position: relative;
-    z-index: 2;
-    color: black;
-    padding: 20px;
-    text-align: center;
+  position: relative;
+  z-index: 2;
+  color: black;
+  padding: 20px;
+  text-align: center;
 }
 
 .seeMoreTextColor {
-    color: white;
+  color: white;
 }
 
 .popup {
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: rgba(0, 0, 0, 0.7);
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .popup-inner {
-    background: white;
-    padding: 20px;
-    border-radius: 5px;
-    max-width: 500px;
-    margin: auto;
-    position: relative;
+  background: white;
+  padding: 20px;
+  border-radius: 5px;
+  max-width: 500px;
+  margin: auto;
+  position: relative;
 }
 
 .recipeDetails {
-    display: flex;
-    flex-direction: column;
-    justify-content: left;
-    align-items: left;
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
-    background-color: white !important;
+  display: flex;
+  flex-direction: column;
+  color:white;
+  justify-content: left;
+  align-items: left;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  background-color: white !important;
+}
+
+.recipeDetails2 {
+  display: flex;
+  flex-direction: column;
+  color:white;
+  justify-content: left;
+  align-items: left;
+  max-width: 800px;
+  margin: 0 auto;
+  border-radius: 10px;
+  background-color: #94857B;
 }
 
 .recipeDetails h1 {
-    color: #333;
-    font-size: 2.5em;
-    margin-bottom: 20px;
+  color: #333;
+  font-size: 2.5em;
+  margin-bottom: 20px;
 }
 
-.recipeDetails p {
-    color: #666;
-    line-height: 1.6;
-    font-size: 1.2em;
-    margin-bottom: 10px;
-}
-
-.recipeDetails a {
-    color: #999393;
-    text-decoration: none;
-    font-size: 1.2em;
-}
-
-.recipeDetails .homeLink {
-    margin-top: 20px;
-    color: #fff;
-    background-color: #999393;;
-    padding: 10px 20px;
-    border-radius: 5px;
-    text-decoration: none;
-    font-size: 1.2em;
+.homeLink {
+  margin-top: 20px;
+  color: #fff;
+  background-color: #999393;
+  padding: 10px 20px;
+  border-radius: 5px;
+  text-decoration: none;
+  font-size: 1.2em;
+  width: 20%;
 }
 
 .filters {
-    padding: 10px;
-    font-size: 1rem;
-    border-radius: 5px;
-    border: none;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 10px;
+  font-size: 1rem;
+  border-radius: 5px;
+  border: none;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .badRequestNotFoundStyle {
-    color: blue;
-    cursor: pointer;
+  color: blue;
+  cursor: pointer;
 }
