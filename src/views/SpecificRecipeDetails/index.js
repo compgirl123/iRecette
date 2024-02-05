@@ -10,15 +10,11 @@ const RecipeDetails = () => {
   const { idMeal } = useParams();
   const [recipeDetails, setRecipeDetails] = useState(null);
   const [ingredients, setIngredients] = useState([]);
+  const [measures, setMeasures] = useState([]);
   const [countryEmoji, setCountryEmoji] = useState('');
-
-  /*const updateLocalStorage = () => {
-    const storedDetails = localStorage.getItem(`recipeDetails_${idMeal}`);
-  };*/
 
   const fetchRecipeDetails = useCallback(async () => {
     try {
-      console.log("HHH");
       const storedDetails = localStorage.getItem(`recipeDetails_${idMeal}`);
       if (storedDetails) {
         setRecipeDetails(JSON.parse(storedDetails));
@@ -36,11 +32,16 @@ const RecipeDetails = () => {
 
   const getInformation = useCallback(() => {
     if (recipeDetails && recipeDetails.meals && recipeDetails.meals[0]) {
-      console.log("Information gathered:", recipeDetails.meals[0].strIngredient1);
-      const renderedProperties = Object.keys(recipeDetails.meals[0])
+      const ingredientsList = Object.keys(recipeDetails.meals[0])
         .filter(key => key.includes("strIngredient"))
         .map(key => recipeDetails.meals[0][key]);
-      setIngredients(renderedProperties);
+      setIngredients(ingredientsList);
+
+      //strMeasure1
+      const measuresList = Object.keys(recipeDetails.meals[0])
+        .filter(key => key.includes("strMeasure"))
+        .map(key => recipeDetails.meals[0][key]);
+      setMeasures(measuresList);
     } else {
       console.warn("Recipe details are not available yet.");
     }
@@ -54,8 +55,8 @@ const RecipeDetails = () => {
   };
 
   const foodEmojis = (ingredientName) => {
-    const countryCodes = foodEmojisJson;
-    const ingredientEmojiObject = countryCodes.find(ingredient => (ingredient.name).includes(ingredientName));
+    const foodCodes = foodEmojisJson;
+    const ingredientEmojiObject = foodCodes.find(ingredient => ingredientName.toLowerCase().includes(ingredient.name.toLowerCase()));
     const ingredientCode = ingredientEmojiObject ? ingredientEmojiObject.code : null;
     return ingredientCode;
   };
@@ -72,16 +73,15 @@ const RecipeDetails = () => {
     }
   }
 
- // useEffect for fetching initial data
  useEffect(() => {
   fetchRecipeDetails();
 }, [idMeal,fetchRecipeDetails]);
 
-// useEffect for handling data updates and side effects
 useEffect(() => {
   getInformation();
   setCountryEmoji(getFlagEmoji(countryCodes(recipeDetails?.meals?.[0]?.strArea)));
-  //updateLocalStorage();
+  console.log(recipeDetails);
+  //strMeasure1
 }, [recipeDetails,getInformation]);
 
   return (
@@ -95,7 +95,7 @@ useEffect(() => {
     </div>
     <div className="appDiv">
       <div className="recipeDetails">
-        <h1>{countryEmoji} {recipeDetails?.meals?.[0]?.strArea} {recipeDetails?.meals?.[0]?.strMeal || "Loading..."} {countryEmoji}</h1>
+        <h1>{countryEmoji} {recipeDetails?.meals?.[0]?.strMeal || "Loading..."} {countryEmoji}</h1>
         <div className="foodIngredients">
           <div className="foodImageDiv">
             <img
@@ -109,13 +109,13 @@ useEffect(() => {
               <h3>Ingredients</h3>
                 <ul>
                 {ingredients.map((item, index) => (
-                    item && (
-                      <li key={index}>
-                        {foodEmojis(item)} {item}
-                      </li>
-                    )
-                  ))}
-                </ul>
+                  item && (
+                    <li key={index}>
+                      {foodEmojis(item)} {measures[index]} {item}
+                    </li>
+                  )
+                ))}
+              </ul>
             </div>
           </div>
         </div>
