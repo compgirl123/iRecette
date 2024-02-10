@@ -1,0 +1,16 @@
+[
+  { "name": "Beef", "code": "🥩" },
+  { "name": "Breakfast", "code": "🥞🍳" },
+  { "name": "Chicken", "code": "🐔" },
+  { "name": "Dessert", "code": "🍰" },
+  { "name": "Goat", "code": "🐐" },
+  { "name": "Lamb", "code": "🐑" },
+  { "name": "Miscellaneous", "code": "🎉" },
+  { "name": "Pasta", "code": "🍝" },
+  { "name": "Pork", "code": "🐖" },
+  { "name": "Seafood", "code": "🦞" },
+  { "name": "Side", "code": "🍚" },
+  { "name": "Starter", "code": "🥗" },
+  { "name": "Vegan", "code": "🥦" },
+  { "name": "Vegetarian", "code": "🥕" }
+]

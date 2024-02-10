@@ -5,13 +5,16 @@ import { useParams, Link} from 'react-router-dom';
 import '../../styles/app.css';
 import countryCodesJson from '../Jsons/countryCodes.json';
 import foodEmojisJson from '../Jsons/foodEmojis.json';
+import categoryEmojisJson from '../Jsons/categoryEmojis.json';
 
 const RecipeDetails = () => {
   const { idMeal } = useParams();
   const [recipeDetails, setRecipeDetails] = useState(null);
   const [ingredients, setIngredients] = useState([]);
+  const [recipeInstructions, setRecipeInstructions] = useState([]);
   const [measures, setMeasures] = useState([]);
   const [countryEmoji, setCountryEmoji] = useState('');
+  const [categoryEmoji, setCategoryEmoji] = useState('');
 
   const fetchRecipeDetails = useCallback(async () => {
     try {
@@ -37,11 +40,39 @@ const RecipeDetails = () => {
         .map(key => recipeDetails.meals[0][key]);
       setIngredients(ingredientsList);
 
-      //strMeasure1
       const measuresList = Object.keys(recipeDetails.meals[0])
         .filter(key => key.includes("strMeasure"))
         .map(key => recipeDetails.meals[0][key]);
       setMeasures(measuresList);
+
+      const recipeInstructionsInfo = Object.keys(recipeDetails.meals[0])
+      .filter(key => key.includes("strInstructions"))
+      .map(key => recipeDetails.meals[0][key]);
+
+      const splitInstructions = recipeInstructionsInfo.reduce((acc, instruction) => {
+        const firstNumberWithPeriod = instruction.match(/^\d+\./);
+        if (firstNumberWithPeriod && !/^(0\.|1\.)/.test(firstNumberWithPeriod[0])) {
+          return acc.concat(instruction.split('.'));
+        } else {
+          // Update the regex pattern to split when "Gas number ." or "gas number ." appears
+          const splitted = firstNumberWithPeriod ? instruction.split(/(\d+\.(?:\s+)?)/i).filter(Boolean) : instruction.split('.');
+          return acc.concat(splitted);
+        }
+      }, []);
+
+      const combinedInstructions = [];
+      for (let i = 0; i < splitInstructions.length; i++) {
+        if (/\d/.test(splitInstructions[i])) {
+          combinedInstructions.push(splitInstructions[i] + splitInstructions[i + 1]);
+          i++;
+        } else {
+          combinedInstructions.push(splitInstructions[i]);
+        }
+      }
+
+      setRecipeInstructions(combinedInstructions);
+
+
     } else {
       console.warn("Recipe details are not available yet.");
     }
@@ -60,6 +91,13 @@ const RecipeDetails = () => {
     const ingredientCode = ingredientEmojiObject ? ingredientEmojiObject.code : null;
     return ingredientCode;
   };
+
+  const categoryEmojis = (categoryName) => {
+    const categoryEmojis = categoryEmojisJson;
+    const categoryCodeObject = categoryEmojis.find(category => category.name === categoryName);
+    const categoryCode = categoryCodeObject ? categoryCodeObject.code : null;
+    return categoryCode;
+  }
 
   const getFlagEmoji = (countryCode) => {
     if (countryCode) {
@@ -80,28 +118,38 @@ const RecipeDetails = () => {
 useEffect(() => {
   getInformation();
   setCountryEmoji(getFlagEmoji(countryCodes(recipeDetails?.meals?.[0]?.strArea)));
+  setCategoryEmoji(categoryEmojis(recipeDetails?.meals?.[0]?.strCategory));
   console.log(recipeDetails);
-  //strMeasure1
 }, [recipeDetails,getInformation]);
 
   return (
     <>
     <div className="appDiv2">
-      <div className="recipeDetails2">
-        <Link className="homeLink" to="/">
-          View all Recipes
-        </Link>
-        </div>
+    <div className="recipeDetails2">
+      <Link className="homeLink" to="/">
+        View all Recipes
+      </Link>
+    </div>
     </div>
     <div className="appDiv">
       <div className="recipeDetails">
         <h1>{countryEmoji} {recipeDetails?.meals?.[0]?.strMeal || "Loading..."} {countryEmoji}</h1>
+        <div className="tags">
+          <div className="tagStyle">{categoryEmoji} {recipeDetails?.meals?.[0]?.strCategory}</div>
+          <div className="tagStyle">{countryEmoji} {recipeDetails?.meals?.[0]?.strArea}</div>
+          {recipeDetails?.meals?.[0]?.strYoutube  &&
+          <a href={recipeDetails?.meals?.[0]?.strYoutube} target="_blank" rel="noopener noreferrer" className="tagStyle">
+          📺 View Recipe Video
+        </a>
+        }
+
+        </div>
         <div className="foodIngredients">
           <div className="foodImageDiv">
             <img
               src={recipeDetails?.meals?.[0]?.strMealThumb}
               alt={recipeDetails?.meals?.[0]?.strMeal}
-              style={{ maxWidth: '100%', height: 'auto' }}
+              style={{ maxWidth: '100%', height: 'auto',  borderRadius:'10px' }}
             />
           </div>
           <div className="ingredientsListDiv">
@@ -121,15 +169,15 @@ useEffect(() => {
         </div>
         <h1>Instructions</h1>
         <div className="instructions">
-          {recipeDetails?.meals?.[0]?.strInstructions.split('.').map((sentence, index, array) => {
-            const isStep = /Step \d+/.test(sentence);
-            return (
-              <p key={index}>
-                {isStep ? <strong>{sentence}</strong> : sentence}
-                {index < array.length - 1 ? '.' : ''}
-              </p>
-            );
-          })}
+          <ul>
+          {recipeInstructions.map((item, index) => (
+              item && (
+                <li key={index}>
+                  {item}
+                </li>
+              )
+          ))}
+          </ul>
         </div>
       </div>
     </div>

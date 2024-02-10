@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
-import Emoji from '../../components/Emoji';
 import '../../styles/app.css';
 import { Link } from 'react-router-dom';
 import Filters from '../../components/Filters';
+import Button from '../../components/Button';
 
 const HomePage = () => {
   const [originalRecipesList, setOriginalRecipesList] = useState([]);
@@ -13,6 +13,7 @@ const HomePage = () => {
   const [selectedCountry, setSelectedCountry] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
   const [loading, setLoading] = useState(true);
+  //const [randomClicked, setRandomClicked] = useState(false);
 
   const handleSearchChange = (event) => {
     setSearch(event.target.value);
@@ -24,6 +25,22 @@ const HomePage = () => {
 
   const handleCountryChange = (event) => {
     setSelectedCountry(event.target.value);
+  };
+
+  const test = () => {
+    setSearch('');
+    setSelectedCategory('');
+    setSelectedCountry('');
+
+    const storedRecipes = JSON.parse(localStorage.getItem('recipes'));
+    const randomInt = Math.floor(Math.random() * 301);
+    const randomRecipe = storedRecipes[randomInt];
+
+    if (randomRecipe) {
+      setFilteredRecipesList([randomRecipe]);
+    }
+
+    //setRandomClicked(true);
   };
 
   const getListOfRecipes = useCallback(async () => {
@@ -66,7 +83,6 @@ const HomePage = () => {
 
     try {
       const recipesList = await getRecipes();
-
       if (recipesList && recipesList.length > 0) {
         setOriginalRecipesList(recipesList);
         setFilteredRecipesList(recipesList);
@@ -151,7 +167,10 @@ const HomePage = () => {
           defaultLabel="All Food Countries"
         />
       </div>
-      <h2><Emoji symbol="🍝" label="Pasta" />Here are a list of {filteredRecipesList.length} recipes...<Emoji symbol="🍴" label="Utensils" /></h2>
+      <div className="filtersDiv">
+       <Button label={"Surprise Me 🎉"} onClick={test}>otto</Button>
+      </div>
+      <h2>🍝Here are a list of {filteredRecipesList.length} recipes...🍴</h2>
       {loading ? (
         <p>Loading...</p>
       ) : (

@@ -51,6 +51,12 @@ html, body{
   border-radius: 10px;
   margin: 7px;
   color:white;
+  font-size:15pt;
+  line-height: 1.5; /* Adjust line height for spacing between lines */
+}
+
+.instructions li {
+  margin-bottom: 15px;
 }
 
 .ingredientsListDesign{
@@ -156,10 +162,28 @@ ingredientsListDesign ul {
   position: relative;
 }
 
+.tags{
+  display: flex;
+  justify-content: center;
+}
+
+.tagStyle{
+  background-color: brown;
+  color: white;
+  border-radius:20px;
+  width: max-content;
+  padding: 10px;
+  margin: 5px;
+}
+
+tagStyle:hover {
+  text-decoration: none; /* Ensure no underline on hover */
+  color: inherit; /* Ensure same color on hover */
+}
+
 .recipeDetails {
   display: flex;
   flex-direction: column;
-  color:white;
   justify-content: left;
   align-items: left;
   max-width: 800px;
@@ -167,13 +191,12 @@ ingredientsListDesign ul {
   padding: 20px;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
   border-radius: 10px;
-  background-color: white !important;
+  background-color: white;
 }
 
 .recipeDetails2 {
   display: flex;
   flex-direction: column;
-  color:white;
   justify-content: left;
   align-items: left;
   max-width: 800px;
@@ -185,7 +208,6 @@ ingredientsListDesign ul {
 .recipeDetails h1 {
   color: #333;
   font-size: 2.5em;
-  margin-bottom: 20px;
 }
 
 .homeLink {
@@ -210,4 +232,19 @@ ingredientsListDesign ul {
 .badRequestNotFoundStyle {
   color: blue;
   cursor: pointer;
+}
+
+.buttonStyle {
+  background-color: brown;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.buttonStyle:hover {
+  background-color: darkbrown; /* Change to a darker shade on hover */
 }
