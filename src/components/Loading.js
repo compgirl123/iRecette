@@ -8,8 +8,7 @@ const RecipeNotFound = () =>{
           <main>
           <div className ="appDiv">
             <Container>
-            <h2>400 Bad Request</h2>
-            <h3>We're sorry, the page you requested is unavailable.</h3>
+            <h2>Loading...</h2>
             </Container>
             </div>
           </main>

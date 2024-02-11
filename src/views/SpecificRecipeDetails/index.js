@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams, Link } from 'react-router-dom';
 import RecipeNotFound from '../../components/RecipeNotFound404';
+import Loading from '../../components/Loading';
 import '../../styles/app.css';
 import countryCodesJson from '../Jsons/countryCodes.json';
 import foodEmojisJson from '../Jsons/foodEmojis.json';
@@ -32,7 +33,6 @@ const RecipeDetails = () => {
             const response = await axios.get(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${idMeal}`);
             const data = response.data;
 
-            // Check if the response data contains valid information
             if (data.meals && data.meals.length > 0) {
               localStorage.setItem(`recipeDetails_${idMeal}`, JSON.stringify(data));
               if (isMounted) {
@@ -48,7 +48,6 @@ const RecipeDetails = () => {
           const response = await axios.get(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${idMeal}`);
           const data = response.data;
 
-          // Check if the response data contains valid information
           if (data.meals && data.meals.length > 0) {
             localStorage.setItem(`recipeDetails_${idMeal}`, JSON.stringify(data));
             if (isMounted) {
@@ -155,10 +154,6 @@ const RecipeDetails = () => {
     }
   };
 
-  /*if (notFound) {
-    return <RecipeNotFound />;
-  }*/
-
   return (
     <>
       <div className="appDiv2">
@@ -170,14 +165,13 @@ const RecipeDetails = () => {
       </div>
 
       <div className="appDiv">
+      {(loading || notFound) && (
+        <>
+          {loading && <Loading/>}
+          {notFound && <RecipeNotFound />}
+        </>
+       )}
         <div className="recipeDetails">
-        {(loading || notFound) && (
-            <>
-              {loading && <h1>Loading...</h1>}
-              {notFound && <RecipeNotFound />}
-            </>
-          )}
-
           {(!loading && !notFound) && (recipeDetails?.meals?.[0]?.strCategory || recipeDetails?.meals?.[0]?.strArea || recipeDetails?.meals?.[0]?.strYoutube) && (
             <>
               <h1>{countryEmoji} {recipeDetails?.meals?.[0]?.strMeal} {countryEmoji}</h1>

@@ -4,6 +4,7 @@ import '../../styles/app.css';
 import { Link } from 'react-router-dom';
 import Filters from '../../components/Filters';
 import Button from '../../components/Button';
+import Loading from '../../components/Loading';
 
 const HomePage = () => {
   const [originalRecipesList, setOriginalRecipesList] = useState([]);
@@ -168,7 +169,7 @@ const HomePage = () => {
        <Button label={"Surprise Me 🎉"} onClick={test}>otto</Button>
       </div>
       {loading ? (
-        <h1>Loading...</h1>
+        <Loading/>
       ) : (
         <>
         <h2>🍝Here are a list of {filteredRecipesList.length} recipe{filteredRecipesList.length > 1 ? ("s"):(" ...")}🍴</h2>
