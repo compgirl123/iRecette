@@ -117,10 +117,6 @@ useEffect(() => {
   console.log(recipeDetails);
   }, [recipeDetails,getInformation]);
 
-  /*if (!recipeDetails || (recipeDetails && recipeDetails.loading) || !recipeDetails.meals || recipeDetails.meals.length === 0) {
-    return recipeDetails && recipeDetails.loading ? <div>Loading...</div> : <RecipeNotFound />;
-  }*/
-
   return (
     <>
     <div className="appDiv2">
@@ -130,68 +126,69 @@ useEffect(() => {
         </Link>
       </div>
     </div>
-    {!recipeDetails || (recipeDetails && recipeDetails.loading) || !recipeDetails.meals || recipeDetails.meals.length === 0
-    ?(<RecipeNotFound />)
-    : ( <div className="appDiv">
-      <div className="recipeDetails">
-        <h1>{countryEmoji} {recipeDetails?.meals?.[0]?.strMeal || "Loading..."} {countryEmoji}</h1>
-        <div className="tags">
-          <div className="tagStyle">
-            <div className="divSpacing">
-              {categoryEmoji} {recipeDetails?.meals?.[0]?.strCategory}
+    {recipeDetails && !recipeDetails.loading && recipeDetails.meals && recipeDetails.meals.length !== 0 ? (
+        <div className="appDiv">
+          <div className="recipeDetails">
+            <h1>{countryEmoji} {recipeDetails?.meals?.[0]?.strMeal || "Loading..."} {countryEmoji}</h1>
+            <div className="tags">
+              <div className="tagStyle">
+                <div className="divSpacing">
+                  {categoryEmoji} {recipeDetails?.meals?.[0]?.strCategory}
+                </div>
+              </div>
+              <div className="tagStyle">
+                <div className="divSpacing">
+                  {countryEmoji} {recipeDetails?.meals?.[0]?.strArea}
+                </div>
+              </div>
+              {recipeDetails?.meals?.[0]?.strYoutube &&
+                <a href={recipeDetails?.meals?.[0]?.strYoutube} target="_blank" rel="noopener noreferrer" className="tagStyle">
+                  <div className="divSpacing">
+                    📺 Recipe Video
+                  </div>
+                </a>
+              }
             </div>
-          </div>
-            <div className="tagStyle">
-              <div className="divSpacing">
-                {countryEmoji} {recipeDetails?.meals?.[0]?.strArea}
+            <div className="foodIngredients">
+              <div className="foodImageDiv">
+                <img
+                  src={recipeDetails?.meals?.[0]?.strMealThumb}
+                  alt={recipeDetails?.meals?.[0]?.strMeal}
+                  className="imageSrc"
+                />
+              </div>
+              <div className="ingredientsListDiv">
+                <div className="ingredientsListDesign">
+                  <h2>Ingredients</h2>
+                  <ul>
+                    {ingredients.map((item, index) => (
+                      item && (
+                        <li key={index}>
+                          {foodEmojis(item)} {measures[index]} {item}
+                        </li>
+                      )
+                    ))}
+                  </ul>
+                </div>
               </div>
             </div>
-            {recipeDetails?.meals?.[0]?.strYoutube  &&
-            <a href={recipeDetails?.meals?.[0]?.strYoutube} target="_blank" rel="noopener noreferrer" className="tagStyle">
-             <div className="divSpacing">
-              📺 Recipe Video
-             </div>
-            </a>
-        }
-        </div>
-        <div className="foodIngredients">
-          <div className="foodImageDiv">
-            <img
-              src={recipeDetails?.meals?.[0]?.strMealThumb}
-              alt={recipeDetails?.meals?.[0]?.strMeal}
-              className = "imageSrc"
-            />
-          </div>
-          <div className="ingredientsListDiv">
-           <div className="ingredientsListDesign">
-            <h2>Ingredients</h2>
+            <div className="instructions">
+              <h2>Instructions</h2>
               <ul>
-              {ingredients.map((item, index) => (
-                item && (
-                  <li key={index}>
-                    {foodEmojis(item)} {measures[index]} {item}
-                  </li>
-                )
-              ))}
-            </ul>
+                {recipeInstructions.map((item, index) => (
+                  item && (
+                    <li key={index}>
+                      {item}
+                    </li>
+                  )
+                ))}
+              </ul>
+            </div>
           </div>
-         </div>
         </div>
-        <div className="instructions">
-        <h2>Instructions</h2>
-          <ul>
-          {recipeInstructions.map((item, index) => (
-              item && (
-                <li key={index}>
-                  {item}
-                </li>
-              )
-          ))}
-          </ul>
-        </div>
-      </div>
-    </div>)
-    }
+      ) : (
+        <RecipeNotFound />
+      )}
     </>
   );
 };

@@ -169,10 +169,12 @@ const HomePage = () => {
       <div className="filtersDiv">
        <Button label={"Surprise Me 🎉"} onClick={test}>otto</Button>
       </div>
-      <h2>🍝Here are a list of {filteredRecipesList.length} recipe{filteredRecipesList.length > 1 ? ("s"):(" ...")}🍴</h2>
+
       {loading ? (
         <p>Loading...</p>
       ) : (
+        <>
+        <h2>🍝Here are a list of {filteredRecipesList.length} recipe{filteredRecipesList.length > 1 ? ("s"):(" ...")}🍴</h2>
         <div className="homePageListOfrecipes">
           {filteredRecipesList.length > 0 ? (
             filteredRecipesList.map((recipe, index) => (
@@ -209,6 +211,7 @@ const HomePage = () => {
             <h2>No Results</h2>
           )}
         </div>
+        </>
       )}
     </div>
   );
