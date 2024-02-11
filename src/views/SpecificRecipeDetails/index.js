@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useParams, Link} from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import RecipeNotFound from '../../components/RecipeNotFound404';
 import '../../styles/app.css';
 import countryCodesJson from '../Jsons/countryCodes.json';
@@ -15,27 +15,72 @@ const RecipeDetails = () => {
   const [measures, setMeasures] = useState([]);
   const [countryEmoji, setCountryEmoji] = useState('');
   const [categoryEmoji, setCategoryEmoji] = useState('');
-  const [notFound, setNotFound] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [notFound, setNotFound] = useState(false);
 
-  const fetchRecipeDetails = useCallback(async () => {
-    try {
-      const storedDetails = localStorage.getItem(`recipeDetails_${idMeal}`);
-      if (storedDetails) {
-        setRecipeDetails(JSON.parse(storedDetails));
-      } else {
-        const response = await axios.get(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${idMeal}`);
-        const data = response.data;
-        localStorage.setItem(`recipeDetails_${idMeal}`, JSON.stringify(data));
-        setRecipeDetails(data);
+  useEffect(() => {
+    let isMounted = true;
+
+    const fetchData = async () => {
+      try {
+        const storedDetails = localStorage.getItem(`recipeDetails_${idMeal}`);
+        if (storedDetails) {
+          const parsedDetails = JSON.parse(storedDetails);
+          if (parsedDetails.meals) {
+            setRecipeDetails(parsedDetails);
+          } else {
+            const response = await axios.get(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${idMeal}`);
+            const data = response.data;
+
+            // Check if the response data contains valid information
+            if (data.meals && data.meals.length > 0) {
+              localStorage.setItem(`recipeDetails_${idMeal}`, JSON.stringify(data));
+              if (isMounted) {
+                setRecipeDetails(data);
+              }
+            } else {
+              if (isMounted) {
+                setNotFound(true);
+              }
+            }
+          }
+        } else {
+          const response = await axios.get(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${idMeal}`);
+          const data = response.data;
+
+          // Check if the response data contains valid information
+          if (data.meals && data.meals.length > 0) {
+            localStorage.setItem(`recipeDetails_${idMeal}`, JSON.stringify(data));
+            if (isMounted) {
+              setRecipeDetails(data);
+            }
+          } else {
+            if (isMounted) {
+              setNotFound(true);
+            }
+          }
+        }
+      } catch (error) {
+        console.error('Failed to fetch recipe details:', error);
+        if (isMounted) {
+          setNotFound(true);
+        }
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
       }
-    } catch (error) {
-      console.error('Failed to fetch recipe details:', error);
-      setNotFound(true);
-    }
+    };
+
+
+    fetchData();
+
+    return () => {
+      isMounted = false;
+    };
   }, [idMeal]);
 
-  const getInformation = useCallback(() => {
+  useEffect(() => {
     if (recipeDetails && recipeDetails.meals && recipeDetails.meals[0]) {
       const ingredientsList = Object.keys(recipeDetails.meals[0])
         .filter(key => key.includes("strIngredient"))
@@ -48,8 +93,8 @@ const RecipeDetails = () => {
       setMeasures(measuresList);
 
       const recipeInstructionsInfo = Object.keys(recipeDetails.meals[0])
-      .filter(key => key.includes("strInstructions"))
-      .map(key => recipeDetails.meals[0][key]);
+        .filter(key => key.includes("strInstructions"))
+        .map(key => recipeDetails.meals[0][key]);
 
       const splitInstructions = recipeInstructionsInfo.reduce((acc, instruction) => {
         const firstNumberWithPeriod = instruction.match(/^\d+\./);
@@ -71,10 +116,11 @@ const RecipeDetails = () => {
         }
       }
       setRecipeInstructions(combinedInstructions);
-    } else {
-      console.warn("Recipe details are not available yet.");
+
+      setCountryEmoji(getFlagEmoji(countryCodes(recipeDetails.meals[0].strArea)));
+      setCategoryEmoji(categoryEmojis(recipeDetails.meals[0].strCategory));
     }
-  },[recipeDetails]);
+  }, [recipeDetails]);
 
   const countryCodes = (countryName) => {
     const countryCodes = countryCodesJson;
@@ -95,117 +141,111 @@ const RecipeDetails = () => {
     const categoryCodeObject = categoryEmojis.find(category => category.name === categoryName);
     const categoryCode = categoryCodeObject ? categoryCodeObject.code : null;
     return categoryCode;
-  }
+  };
 
   const getFlagEmoji = (countryCode) => {
     if (countryCode) {
       const codePoints = countryCode
         .toUpperCase()
         .split('')
-        .map(char =>  127397 + char.charCodeAt());
+        .map(char => 127397 + char.charCodeAt());
       return String.fromCodePoint(...codePoints);
     } else {
       return '';
     }
-  }
+  };
 
- useEffect(() => {
-  fetchRecipeDetails();
-  }, [idMeal,fetchRecipeDetails]);
-
-  useEffect(() => {
-    if (recipeDetails && recipeDetails.meals && recipeDetails.meals[0]) {
-        getInformation();
-        setCountryEmoji(getFlagEmoji(countryCodes(recipeDetails?.meals?.[0]?.strArea)));
-        setCategoryEmoji(categoryEmojis(recipeDetails?.meals?.[0]?.strCategory));
-        setNotFound(false);
-        setLoading(false); // Set loading to false when data is fetched
-    } else {
-      setNotFound(true);
-      setLoading(false); // Set loading to false even if there's an error
-    }
-}, [recipeDetails, getInformation]);
-
-
-if (loading) {
-  return <div>Loading...</div>; // Display a loading message or spinner while loading
-}
-
-if (notFound) {
-  return <RecipeNotFound />;
-}
+  /*if (notFound) {
+    return <RecipeNotFound />;
+  }*/
 
   return (
     <>
-    <div className="appDiv2">
-      <div className="recipeDetails2">
-        <Link className="homeLink" to="/">
-          View all Recipes
-        </Link>
-      </div>
-    </div>
-        <div className="appDiv">
-          <div className="recipeDetails">
-            <h1>{countryEmoji} {recipeDetails?.meals?.[0]?.strMeal || "Loading..."} {countryEmoji}</h1>
-            <div className="tags">
-              <div className="tagStyle">
-                <div className="divSpacing">
-                  {categoryEmoji} {recipeDetails?.meals?.[0]?.strCategory}
-                </div>
-              </div>
-              <div className="tagStyle">
-                <div className="divSpacing">
-                  {countryEmoji} {recipeDetails?.meals?.[0]?.strArea}
-                </div>
-              </div>
-              {recipeDetails?.meals?.[0]?.strYoutube &&
-                <a href={recipeDetails?.meals?.[0]?.strYoutube} target="_blank" rel="noopener noreferrer" className="tagStyle">
-                  <div className="divSpacing">
-                    📺 Recipe Video
-                  </div>
-                </a>
-              }
-            </div>
-            <div className="foodIngredients">
-              <div className="foodImageDiv">
-                <img
-                  src={recipeDetails?.meals?.[0]?.strMealThumb}
-                  alt={recipeDetails?.meals?.[0]?.strMeal}
-                  className="imageSrc"
-                />
-              </div>
-              <div className="ingredientsListDiv">
-                <div className="ingredientsListDesign">
-                  <h2>Ingredients</h2>
-                  <ul>
-                    {ingredients.map((item, index) => (
-                      item && (
-                        <li key={index}>
-                          {foodEmojis(item)} {measures[index]} {item}
-                        </li>
-                      )
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            </div>
-            <div className="instructions">
-              <h2>Instructions</h2>
-              <ul>
-                {recipeInstructions.map((item, index) => (
-                  item && (
-                    <li key={index}>
-                      {item}
-                    </li>
-                  )
-                ))}
-              </ul>
-            </div>
-          </div>
+      <div className="appDiv2">
+        <div className="recipeDetails2">
+          <Link className="homeLink" to="/">
+            View all Recipes
+          </Link>
         </div>
+      </div>
 
+      <div className="appDiv">
+        <div className="recipeDetails">
+        {(loading || notFound) && (
+            <>
+              {loading && <h1>Loading...</h1>}
+              {notFound && <RecipeNotFound />}
+            </>
+          )}
+
+          {(!loading && !notFound) && (recipeDetails?.meals?.[0]?.strCategory || recipeDetails?.meals?.[0]?.strArea || recipeDetails?.meals?.[0]?.strYoutube) && (
+            <>
+              <h1>{countryEmoji} {recipeDetails?.meals?.[0]?.strMeal} {countryEmoji}</h1>
+              <div className="tags">
+                <div className="tagStyle">
+                  <div className="divSpacing">
+                    {categoryEmoji} {recipeDetails?.meals?.[0]?.strCategory}
+                  </div>
+                </div>
+                <div className="tagStyle">
+                  <div className="divSpacing">
+                    {countryEmoji} {recipeDetails?.meals?.[0]?.strArea}
+                  </div>
+                </div>
+                {recipeDetails?.meals?.[0]?.strYoutube && (
+                  <a href={recipeDetails?.meals?.[0]?.strYoutube} target="_blank" rel="noopener noreferrer" className="tagStyle">
+                    <div className="divSpacing">
+                      📺 Recipe Video
+                    </div>
+                  </a>
+                )}
+              </div>
+
+              <div className="foodIngredients">
+                <div className="foodImageDiv">
+                  <img
+                    src={recipeDetails?.meals?.[0]?.strMealThumb}
+                    alt={recipeDetails?.meals?.[0]?.strMeal}
+                    className="imageSrc"
+                  />
+                </div>
+
+                <div className="ingredientsListDiv">
+                  <div className="ingredientsListDesign">
+                    <h2>Ingredients</h2>
+                    <ul>
+                      {ingredients.map((item, index) => (
+                        item && (
+                          <li key={index}>
+                            {foodEmojis(item)} {measures[index]} {item}
+                          </li>
+                        )
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <div className="instructions">
+                <h2>Instructions</h2>
+                <ul>
+                  {recipeInstructions.map((item, index) => (
+                    item && (
+                      <li key={index}>
+                        {item}
+                      </li>
+                    )
+                  ))}
+                </ul>
+              </div>
+            </>
+          )}
+
+        </div>
+      </div>
     </>
   );
+
 };
 
 export default RecipeDetails;
