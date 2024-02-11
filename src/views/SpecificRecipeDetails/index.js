@@ -117,20 +117,22 @@ useEffect(() => {
   console.log(recipeDetails);
   }, [recipeDetails,getInformation]);
 
-  if (!recipeDetails || !recipeDetails.meals || recipeDetails.meals.length === 0) {
-    return <RecipeNotFound />;
-  }
+  /*if (!recipeDetails || (recipeDetails && recipeDetails.loading) || !recipeDetails.meals || recipeDetails.meals.length === 0) {
+    return recipeDetails && recipeDetails.loading ? <div>Loading...</div> : <RecipeNotFound />;
+  }*/
 
   return (
     <>
     <div className="appDiv2">
-    <div className="recipeDetails2">
-      <Link className="homeLink" to="/">
-        View all Recipes
-      </Link>
+      <div className="recipeDetails2">
+        <Link className="homeLink" to="/">
+          View all Recipes
+        </Link>
+      </div>
     </div>
-    </div>
-    <div className="appDiv">
+    {!recipeDetails || (recipeDetails && recipeDetails.loading) || !recipeDetails.meals || recipeDetails.meals.length === 0
+    ?(<RecipeNotFound />)
+    : ( <div className="appDiv">
       <div className="recipeDetails">
         <h1>{countryEmoji} {recipeDetails?.meals?.[0]?.strMeal || "Loading..."} {countryEmoji}</h1>
         <div className="tags">
@@ -161,7 +163,7 @@ useEffect(() => {
             />
           </div>
           <div className="ingredientsListDiv">
-            <div className="ingredientsListDesign">
+           <div className="ingredientsListDesign">
             <h2>Ingredients</h2>
               <ul>
               {ingredients.map((item, index) => (
@@ -188,7 +190,8 @@ useEffect(() => {
           </ul>
         </div>
       </div>
-    </div>
+    </div>)
+    }
     </>
   );
 };
