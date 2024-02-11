@@ -3,12 +3,9 @@ h1 {
     color:white;
 }
 
-h2{
-    color:white;
-}
-
-h3{
+h2, h3{
   text-align: center;
+  color:white;
 }
 
 html, body{
@@ -34,25 +31,24 @@ html, body{
   float: left;
   width: 50%;
   height: 100%;
-  margin-top:10px;
+  margin-top:7px;
 }
 
 .ingredientsListDiv{
   float: left;
-  border-style: solid;
-  border-width: 2px;
-  color:white;
   width: 50%;
+  display: flex;
+  flex-direction: column;
 }
 
 .instructions{
   background-color: #94857B;
   padding:5px;
   border-radius: 10px;
-  margin: 7px;
+  margin-top: 10px;
   color:white;
   font-size:15pt;
-  line-height: 1.5; /* Adjust line height for spacing between lines */
+  line-height: 1.5;
 }
 
 .instructions li {
@@ -61,9 +57,11 @@ html, body{
 
 .ingredientsListDesign{
   background-color: #94857B;
+  color: white;
   padding:5px;
   border-radius: 10px;
   margin: 7px;
+  margin-right: 0px;
   font-size:15pt;
 }
 
@@ -78,6 +76,12 @@ ingredientsListDesign ul {
 
 .ingredientsListDesign li {
   margin-bottom: 8px;
+}
+
+.imageSrc{
+  max-width: 100%;
+  height: auto;
+  border-radius:10px;
 }
 
 .filtersDiv {
@@ -96,18 +100,34 @@ ingredientsListDesign ul {
   padding:10px;
 }
 
-.homePageListOfBreweries {
+.homePageListOfrecipes {
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;
 }
 
-.breweriestListStyle {
+.recipesListStyle {
   border: 1px solid #ddd;
   border-radius: 5px;
   padding: 20px;
   margin: 10px;
   flex: 0 0 30%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
+  height: 300px;
+  overflow: hidden;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.recipesListStyle2 {
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 20px;
+  margin: 10px;
+  flex: 0 0 100%;
   position: relative;
   display: flex;
   align-items: center;
@@ -168,7 +188,7 @@ ingredientsListDesign ul {
 }
 
 .tagStyle{
-  background-color: brown;
+  background-color: #544541;
   color: white;
   border-radius:20px;
   width: max-content;
@@ -177,8 +197,8 @@ ingredientsListDesign ul {
 }
 
 tagStyle:hover {
-  text-decoration: none; /* Ensure no underline on hover */
-  color: inherit; /* Ensure same color on hover */
+  text-decoration: none;
+  color: inherit;
 }
 
 .recipeDetails {
@@ -213,7 +233,7 @@ tagStyle:hover {
 .homeLink {
   margin-top: 20px;
   color: #fff;
-  background-color: #999393;
+  background-color: #745E59;
   padding: 10px 20px;
   border-radius: 5px;
   text-decoration: none;
@@ -230,12 +250,12 @@ tagStyle:hover {
 }
 
 .badRequestNotFoundStyle {
-  color: blue;
+  color: #745E59;
   cursor: pointer;
 }
 
 .buttonStyle {
-  background-color: brown;
+  background-color: #544541;
   color: white;
   border: none;
   border-radius: 20px;
@@ -246,5 +266,49 @@ tagStyle:hover {
 }
 
 .buttonStyle:hover {
-  background-color: darkbrown; /* Change to a darker shade on hover */
+  background-color: darkbrown;
+}
+
+@media (max-width: 768px) {
+  .foodImageDiv, .ingredientsListDiv {
+    width: 100%;
+  }
+
+  .recipestListStyle {
+    flex: 0 0 100%;
+  }
+
+  .searchInput {
+    width: 100%;
+  }
+
+  .homeLink {
+    width: 100%;
+    text-align: center;
+  }
+
+  .ingredientsListDesign{
+    margin: 0px;
+    margin-bottom: 10px;
+  }
+
+  .ingredientsListDiv{
+    border-width: 0px;
+  }
+
+  .instructions{
+    margin: 0px;
+  }
+
+  .homePageListOfrecipes {
+    display: block;
+  }
+
+  .foodImageDiv{
+    margin-bottom:10px;
+  }
+
+  .divSpacing{
+    text-align:center;
+  }
 }

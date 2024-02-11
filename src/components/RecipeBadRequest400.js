@@ -22,5 +22,4 @@ const RecipeNotFound = () =>{
       );
 }
 
-
 export default RecipeNotFound;

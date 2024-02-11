@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { useParams, Link} from 'react-router-dom';
-//import RecipeNotFound from '../../components/RecipeNotFound404';
+import RecipeNotFound from '../../components/RecipeNotFound404';
 import '../../styles/app.css';
 import countryCodesJson from '../Jsons/countryCodes.json';
 import foodEmojisJson from '../Jsons/foodEmojis.json';
@@ -24,7 +24,6 @@ const RecipeDetails = () => {
       } else {
         const response = await axios.get(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${idMeal}`);
         const data = response.data;
-
         localStorage.setItem(`recipeDetails_${idMeal}`, JSON.stringify(data));
         setRecipeDetails(data);
       }
@@ -54,7 +53,6 @@ const RecipeDetails = () => {
         if (firstNumberWithPeriod && !/^(0\.|1\.)/.test(firstNumberWithPeriod[0])) {
           return acc.concat(instruction.split('.'));
         } else {
-          // Update the regex pattern to split when "Gas number ." or "gas number ." appears
           const splitted = firstNumberWithPeriod ? instruction.split(/(\d+\.(?:\s+)?)/i).filter(Boolean) : instruction.split('.');
           return acc.concat(splitted);
         }
@@ -69,10 +67,7 @@ const RecipeDetails = () => {
           combinedInstructions.push(splitInstructions[i]);
         }
       }
-
       setRecipeInstructions(combinedInstructions);
-
-
     } else {
       console.warn("Recipe details are not available yet.");
     }
@@ -113,14 +108,18 @@ const RecipeDetails = () => {
 
  useEffect(() => {
   fetchRecipeDetails();
-}, [idMeal,fetchRecipeDetails]);
+  }, [idMeal,fetchRecipeDetails]);
 
 useEffect(() => {
   getInformation();
   setCountryEmoji(getFlagEmoji(countryCodes(recipeDetails?.meals?.[0]?.strArea)));
   setCategoryEmoji(categoryEmojis(recipeDetails?.meals?.[0]?.strCategory));
   console.log(recipeDetails);
-}, [recipeDetails,getInformation]);
+  }, [recipeDetails,getInformation]);
+
+  if (!recipeDetails || !recipeDetails.meals || recipeDetails.meals.length === 0) {
+    return <RecipeNotFound />;
+  }
 
   return (
     <>
@@ -135,40 +134,49 @@ useEffect(() => {
       <div className="recipeDetails">
         <h1>{countryEmoji} {recipeDetails?.meals?.[0]?.strMeal || "Loading..."} {countryEmoji}</h1>
         <div className="tags">
-          <div className="tagStyle">{categoryEmoji} {recipeDetails?.meals?.[0]?.strCategory}</div>
-          <div className="tagStyle">{countryEmoji} {recipeDetails?.meals?.[0]?.strArea}</div>
-          {recipeDetails?.meals?.[0]?.strYoutube  &&
-          <a href={recipeDetails?.meals?.[0]?.strYoutube} target="_blank" rel="noopener noreferrer" className="tagStyle">
-          📺 View Recipe Video
-        </a>
+          <div className="tagStyle">
+            <div className="divSpacing">
+              {categoryEmoji} {recipeDetails?.meals?.[0]?.strCategory}
+            </div>
+          </div>
+            <div className="tagStyle">
+              <div className="divSpacing">
+                {countryEmoji} {recipeDetails?.meals?.[0]?.strArea}
+              </div>
+            </div>
+            {recipeDetails?.meals?.[0]?.strYoutube  &&
+            <a href={recipeDetails?.meals?.[0]?.strYoutube} target="_blank" rel="noopener noreferrer" className="tagStyle">
+             <div className="divSpacing">
+              📺 Recipe Video
+             </div>
+            </a>
         }
-
         </div>
         <div className="foodIngredients">
           <div className="foodImageDiv">
             <img
               src={recipeDetails?.meals?.[0]?.strMealThumb}
               alt={recipeDetails?.meals?.[0]?.strMeal}
-              style={{ maxWidth: '100%', height: 'auto',  borderRadius:'10px' }}
+              className = "imageSrc"
             />
           </div>
           <div className="ingredientsListDiv">
             <div className="ingredientsListDesign">
-              <h3>Ingredients</h3>
-                <ul>
-                {ingredients.map((item, index) => (
-                  item && (
-                    <li key={index}>
-                      {foodEmojis(item)} {measures[index]} {item}
-                    </li>
-                  )
-                ))}
-              </ul>
-            </div>
+            <h2>Ingredients</h2>
+              <ul>
+              {ingredients.map((item, index) => (
+                item && (
+                  <li key={index}>
+                    {foodEmojis(item)} {measures[index]} {item}
+                  </li>
+                )
+              ))}
+            </ul>
           </div>
+         </div>
         </div>
-        <h1>Instructions</h1>
         <div className="instructions">
+        <h2>Instructions</h2>
           <ul>
           {recipeInstructions.map((item, index) => (
               item && (

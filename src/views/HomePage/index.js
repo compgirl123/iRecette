@@ -13,7 +13,6 @@ const HomePage = () => {
   const [selectedCountry, setSelectedCountry] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
   const [loading, setLoading] = useState(true);
-  //const [randomClicked, setRandomClicked] = useState(false);
 
   const handleSearchChange = (event) => {
     setSearch(event.target.value);
@@ -170,18 +169,18 @@ const HomePage = () => {
       <div className="filtersDiv">
        <Button label={"Surprise Me 🎉"} onClick={test}>otto</Button>
       </div>
-      <h2>🍝Here are a list of {filteredRecipesList.length} recipes...🍴</h2>
+      <h2>🍝Here are a list of {filteredRecipesList.length} recipe{filteredRecipesList.length > 1 ? ("s"):(" ...")}🍴</h2>
       {loading ? (
         <p>Loading...</p>
       ) : (
-        <div className="homePageListOfBreweries">
+        <div className="homePageListOfrecipes">
           {filteredRecipesList.length > 0 ? (
             filteredRecipesList.map((recipe, index) => (
               <div
                 key={index}
                 onMouseEnter={() => setHoverIndex(index)}
                 onMouseLeave={() => setHoverIndex(null)}
-                className="breweriestListStyle"
+                className=  {filteredRecipesList.length === 1 ? "recipesListStyle2" : "recipesListStyle"}
               >
                 <img
                   src={recipe.strMealThumb}
