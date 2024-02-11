@@ -16,6 +16,7 @@ const RecipeDetails = () => {
   const [countryEmoji, setCountryEmoji] = useState('');
   const [categoryEmoji, setCategoryEmoji] = useState('');
   const [notFound, setNotFound] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const fetchRecipeDetails = useCallback(async () => {
     try {
@@ -118,14 +119,20 @@ const RecipeDetails = () => {
         setCountryEmoji(getFlagEmoji(countryCodes(recipeDetails?.meals?.[0]?.strArea)));
         setCategoryEmoji(categoryEmojis(recipeDetails?.meals?.[0]?.strCategory));
         setNotFound(false);
+        setLoading(false); // Set loading to false when data is fetched
     } else {
-        setNotFound(true);
+      setNotFound(true);
+      setLoading(false); // Set loading to false even if there's an error
     }
 }, [recipeDetails, getInformation]);
 
 
-  if (notFound) {
-    return <RecipeNotFound />;
+if (loading) {
+  return <div>Loading...</div>; // Display a loading message or spinner while loading
+}
+
+if (notFound) {
+  return <RecipeNotFound />;
 }
 
   return (
