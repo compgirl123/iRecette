@@ -38,8 +38,6 @@ const HomePage = () => {
     if (randomRecipe) {
       setFilteredRecipesList([randomRecipe]);
     }
-
-    //setRandomClicked(true);
   };
 
   const getListOfRecipes = useCallback(async () => {
@@ -169,9 +167,8 @@ const HomePage = () => {
       <div className="filtersDiv">
        <Button label={"Surprise Me 🎉"} onClick={test}>otto</Button>
       </div>
-
       {loading ? (
-        <p>Loading...</p>
+        <h1>Loading...</h1>
       ) : (
         <>
         <h2>🍝Here are a list of {filteredRecipesList.length} recipe{filteredRecipesList.length > 1 ? ("s"):(" ...")}🍴</h2>

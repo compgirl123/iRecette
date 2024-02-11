@@ -1,10 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 import RecipeDetails from './views/SpecificRecipeDetails';
 import RecipeBadRequest from './components/RecipeBadRequest400';
 import App from './views/App';
-
 import 'sanitize.css/sanitize.css';
 import 'semantic-ui-css/semantic.min.css';
 
@@ -18,4 +17,3 @@ root.render(
         </Switch>
     </Router>,
 );
-

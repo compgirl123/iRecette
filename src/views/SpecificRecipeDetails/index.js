@@ -15,6 +15,7 @@ const RecipeDetails = () => {
   const [measures, setMeasures] = useState([]);
   const [countryEmoji, setCountryEmoji] = useState('');
   const [categoryEmoji, setCategoryEmoji] = useState('');
+  const [notFound, setNotFound] = useState(false);
 
   const fetchRecipeDetails = useCallback(async () => {
     try {
@@ -29,6 +30,7 @@ const RecipeDetails = () => {
       }
     } catch (error) {
       console.error('Failed to fetch recipe details:', error);
+      setNotFound(true);
     }
   }, [idMeal]);
 
@@ -110,12 +112,21 @@ const RecipeDetails = () => {
   fetchRecipeDetails();
   }, [idMeal,fetchRecipeDetails]);
 
-useEffect(() => {
-  getInformation();
-  setCountryEmoji(getFlagEmoji(countryCodes(recipeDetails?.meals?.[0]?.strArea)));
-  setCategoryEmoji(categoryEmojis(recipeDetails?.meals?.[0]?.strCategory));
-  console.log(recipeDetails);
-  }, [recipeDetails,getInformation]);
+  useEffect(() => {
+    if (recipeDetails && recipeDetails.meals && recipeDetails.meals[0]) {
+        getInformation();
+        setCountryEmoji(getFlagEmoji(countryCodes(recipeDetails?.meals?.[0]?.strArea)));
+        setCategoryEmoji(categoryEmojis(recipeDetails?.meals?.[0]?.strCategory));
+        setNotFound(false);
+    } else {
+        setNotFound(true);
+    }
+}, [recipeDetails, getInformation]);
+
+
+  if (notFound) {
+    return <RecipeNotFound />;
+}
 
   return (
     <>
@@ -126,7 +137,6 @@ useEffect(() => {
         </Link>
       </div>
     </div>
-    {recipeDetails && !recipeDetails.loading && recipeDetails.meals && recipeDetails.meals.length !== 0 ? (
         <div className="appDiv">
           <div className="recipeDetails">
             <h1>{countryEmoji} {recipeDetails?.meals?.[0]?.strMeal || "Loading..."} {countryEmoji}</h1>
@@ -186,9 +196,7 @@ useEffect(() => {
             </div>
           </div>
         </div>
-      ) : (
-        <RecipeNotFound />
-      )}
+
     </>
   );
 };
